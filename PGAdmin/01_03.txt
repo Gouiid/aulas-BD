@@ -1,0 +1,222 @@
+CREATE TABLE cliente (codigo_cliente int AUTO_INCREMENT PRIMARY KEY,nome varchar(30) NOT NULL, telefone varchar(11), email varchar(30) NOT NULL UNIQUE,
+					   cpf varchar(11), cnpj varchar(14), razao_social varchar(40),
+						tipo_cliente char);
+
+INSERT INTO cliente (codigo_cliente,nome, telefone, email, cpf, cnpj, razao_social,tipo_cliente)
+					  VALUES(1,'Ana','2422452232','ana@gmail.com','72345678901',null,null,'F');
+
+INSERT INTO cliente (codigo_cliente,nome, telefone, email, cpf, cnpj, razao_social,tipo_cliente)
+					  VALUES(2,'Pão de Açúcar','2122352232','extra@gmail.com',null,'12345678901234','Extra LTDA','J');
+
+INSERT INTO cliente (codigo_cliente,nome, telefone, email, cpf, cnpj, razao_social,tipo_cliente)
+					  VALUES(3,'Joana','2422482232','joana@yahoo.com.br','42345678901',null,null,'F');
+
+
+INSERT INTO cliente (codigo_cliente,nome, telefone, email, cpf, cnpj, razao_social,tipo_cliente)
+					  VALUES(4,'Joaquim','2422473232','joaquim@yahoo.com.br','72345678901',null,null,'F');
+
+INSERT INTO cliente (codigo_cliente,nome, telefone, email, cpf, cnpj, razao_social,tipo_cliente)
+					  VALUES(5,'Gilberto','2422492232','gilberto@hotmail.com','22345678901',null,null,'F');
+
+INSERT INTO cliente (codigo_cliente,nome, telefone, email, cpf, cnpj, razao_social,tipo_cliente)
+					  VALUES(6,'Loja da Esquina','3122352232','loja@gmail.com',null,'22345678901237','XPTO Comercio LTDA','J');
+
+SELECT * from cliente;
+
+
+
+
+
+CREATE TABLE editora (codigo_editora INT AUTO_INCREMENT PRIMARY KEY,
+	nome VARCHAR(30));
+INSERT INTO  editora (nome) VALUES('Vozes'),
+				  ('Ciência Moderna'),
+				  ('Saraiva'),
+                                 ('Campus');	
+
+
+
+
+
+CREATE TABLE livro (isbn varchar(10) PRIMARY KEY, autor varchar(30), quantidade_estoque INT,
+ preco decimal not NULL, codigo_editora int,
+FOREIGN KEY(codigo_editora) REFERENCES editora(codigo_editora));
+
+
+
+CREATE TABLE livro (isbn varchar(10) PRIMARY KEY, autor varchar(30), quantidade_estoque INT,
+ preco decimal not NULL, codigo_editora int,
+FOREIGN KEY(codigo_editora) REFERENCES editora(codigo_editora));
+
+
+INSERT INTO livro (isbn,autor,quantidade_estoque,preco,codigo_editora) VALUES('32222','Rui Barbosa',10,45.5,1);
+INSERT INTO livro (isbn,autor,quantidade_estoque,preco,codigo_editora) VALUES('12345','José de Vasconcelos',10,29.3,2);
+INSERT INTO livro (isbn,autor,quantidade_estoque,preco,codigo_editora) VALUES('31111','Laercio',10,90.5,3);
+INSERT INTO livro (isbn,autor,quantidade_estoque,preco,codigo_editora) VALUES('34451','Ana Rita',10,88.25,2);
+INSERT INTO livro (isbn,autor,quantidade_estoque,preco,codigo_editora) VALUES('22232','Rui dos Santos',10,49.5,1);
+INSERT INTO livro (isbn,autor,quantidade_estoque,preco,codigo_editora) VALUES('12332','Alberto da Silva',10,55.60,3);
+
+
+
+CREATE TABLE compra(numero_nota int PRIMARY KEY, data_compra date,
+codigo_cliente int,FOREIGN KEY(codigo_cliente)
+REFERENCES cliente(codigo_cliente));
+
+
+
+
+
+INSERT INTO compra (numero_nota,data_compra,codigo_cliente) VALUES(12,'2024-02-04',1);
+INSERT INTO compra (numero_nota,data_compra,codigo_cliente) VALUES(13,'2024-01-02',2);
+INSERT INTO compra (numero_nota,data_compra,codigo_cliente) VALUES(122,'2024-01-04',1);
+INSERT INTO compra (numero_nota,data_compra,codigo_cliente) VALUES(121,'2024-01-05',3);
+
+/*CREATE TABLE carrinho( numero_nota int, 
+                      isbn varchar(10),
+                     quantidade_estoque int,
+                     valor_compra decimal, 
+                     desconto decimal,
+                     PRIMARY KEY (numero_nota, isbn),
+                     FOREIGN KEY(numero_nota) REFERENCES compra(numero_nota),
+                     FOREIGN KEY(isbn) REFERENCES livro(isbn));*/
+
+/*INSERT INTO carrinho(numero_nota,isbn,quantidade_estoque,valor_compra,desconto) VALUES(12,'12345',10,29.3,0);
+INSERT INTO carrinho(numero_nota,isbn,quantidade_estoque,valor_compra,desconto) VALUES(12,'31111',2,90.5,0);
+INSERT INTO carrinho(numero_nota,isbn,quantidade_estoque,valor_compra,desconto) VALUES(121,'12345',3,29.3,0);
+INSERT INTO carrinho(numero_nota,isbn,quantidade_estoque,valor_compra,desconto) VALUES(121,'32222',4,45.5,0);*/
+
+LISTAR TODOS OS CLIENTES QUE SAO DO TIPO J?
+select * from cliente where tipo_cliente='J';
+
+LISTAR A QUANTIDADE DE EDITORAS?
+select count(*) from editora
+
+LISTAR O LIVRO MAIS CARO?
+select isbn, autor, max(preco) FROM livro;
+
+LISTAR O LIVRO MAIS BARATO?
+select isbn, autor, MIN(preco) FROM livro;
+
+TOTAL DA COMPRA (CARRINHO) NUMERO_NOTA 121?
+select SUM(valor_compra) FROM carrinho WHERE numero_nota = 121;
+
+ATUALIZAR A QUANTIDADE EM ESTOQUE(ENTRADA DE 10 LIVROS)
+DO LIVRO DE ISBN 12345
+UPDATE livro set quantidade_estoque = quantidade_estoque + 10 
+WHERE isbn = '12345';
+-----------------------------------------------------------------------------------------------------------------------
+
+select c.nome, sum(p.quantidade_estoque)from produto as p, categoria as c
+	WHERE p.codigo_categoria = c.codigo_categoria
+	group by c.nome
+	HAVING c.nome = 'Alimentos';
+
+
+
+
+
+
+
+
+INSERT INTO produto (nome, descricao, preco, quantidade_estoque,codigo_categoria) VALUES('Creme de Leite','Itambé',2.8,25,null);
+INSERT INTO produto (nome, descricao, preco, quantidade_estoque,codigo_categoria) VALUES('Arroz','Princesa',6.5,44,null);
+INSERT INTO produto (nome, descricao, preco, quantidade_estoque,codigo_categoria) VALUES('Colírio','EMS',22.5,30,null);
+INSERT INTO produto (nome, descricao, preco, quantidade_estoque,codigo_categoria) VALUES('Celular','Samsung',2221.5,10,1);
+INSERT INTO produto (nome, descricao, preco, quantidade_estoque,codigo_categoria) VALUES('TV','Samsung',1200,1,1);
+
+
+
+
+
+
+/*select p.codigo_produto, p.nome, c.nome
+from produto as p,categoria as c 
+where p.codigo_categoria = c.codigo_categoria
+*/
+select p.codigo_produto, p.nome, c.nome from produto as p 
+left join categoria as c 
+on p.codigo_categoria = c.codigo_categoria;
+
+
+
+
+
+/*select p.codigo_produto, p.nome, c.nome  
+from produto as p, categoria as c
+WHERE p.codigo_categoria = c.codigo_categoria
+*/
+/*select p.codigo_produto, p.nome, c.nome from produto as p
+INNER JOIN categoria as c
+on p.codigo_categoria = c.codigo_categoria;
+*/
+
+/*select p.codigo_produto, p.nome, c.nome from produto as p
+LEFT JOIN categoria as c
+on p.codigo_categoria = c.codigo_categoria;
+*/
+/*select p.codigo_produto, p.nome, c.nome from produto as p
+RIGHT JOIN categoria as c
+on p.codigo_categoria = c.codigo_categoria;
+*/
+UPDATE produto SET codigo_categoria=4  WHERE codigo_produto = 11;
+
+
+/*select p.codigo_produto, p.nome, c.nome
+from produto as p,categoria as c 
+where p.codigo_categoria = c.codigo_categoria
+*/
+
+/*
+select p.codigo_produto, p.nome, c.nome from produto as p 
+right join categoria as c 
+on p.codigo_categoria = c.codigo_categoria;
+*/
+update produto set codigo_categoria =4 where codigo_produto =11;
+select p.codigo_produto, p.nome, c.nome from produto as p 
+full join categoria as c 
+on p.codigo_categoria = c.codigo_categoria;
+	
+
+
+
+
+
+
+insert into modelo (descricao,preco,codigo_marca) values('X8',358000,null);
+insert into modelo (descricao,preco,codigo_marca) values('Argo',93200,6);
+insert into modelo (descricao,preco,codigo_marca) values('Kronos',98460,6);
+insert into modelo (descricao,preco,codigo_marca) values('Pulse',105000,6);
+insert into modelo (descricao,preco,codigo_marca) values('Creta',103000,1);
+
+
+
+
+
+
+
+
+1) Listar o modelo e nome da marca dos carros somente com marca cadastrada
+SELECT mo.descricao, ma.nome FROM  modelo mo
+INNER JOIN  marca ma
+ON mo.codigo_marca = ma.codigo_marca;
+
+2) Listar o preço médio dos carros
+SELECT ROUND(AVG(preco),2) from modelo;
+
+3) Listar a quantidade total de carros com uma marca cadastrada
+SELECT COUNT(*) FROM  modelo mo
+INNER JOIN  marca ma
+ON mo.codigo_marca = ma.codigo_marca;
+
+4) Listar todos os carros inclusive os sem marca
+SELECT mo.descricao, ma.nome FROM  modelo mo
+LEFT JOIN  marca ma
+ON mo.codigo_marca = ma.codigo_marca;
+
+5) Listar a quantidade de carros (modelos) da marca Fiat
+SELECT count(*) FROM  modelo mo
+WHERE mo.codigo_marca=6
+
+6) Exibir o carro mais barato
+7) Atualizar o preço do modelo HB20S em 10% do valor atual
+set preco = preco * 1.10

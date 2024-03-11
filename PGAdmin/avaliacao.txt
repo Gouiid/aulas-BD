@@ -1,0 +1,43 @@
+Algumas consultas pra realizar:
+
+O total de pacientes
+/*select count(nome) from paciente;*/
+
+O médico com maior salário
+/*select nome, salario from medico where salario =
+(select max(salario) from medico);*/
+
+*Exibir o médico que realizou maior quantidade de consultas.
+SELECT crm, COUNT(*) AS total_consultas
+FROM consulta
+GROUP BY crm
+ORDER BY total_consultas DESC
+LIMIT 1;
+select nome, quantidade from medico,procedimento 
+where quantidade = (select max (quantidade) from medico,procedimento) limit 1 ;
+
+Somar o total a pagar de uma determinada consulta de um paciente e seus procedimentos realizados.
+*select sum(valor) from consulta where codigo_consulta = 1;*/
+Listar todos os procedimentos de um paciente em uma determinada consulta.
+
+select codigo_consulta, codigo_exame, quantidade from procedimento where quantidade = ( 
+select max(quantidade) from procedimento);
+
+Listar qual o procedimento mais utilizado no ambulatório pelos
+pacientes. 
+/*select nome_exame, valor from exames;*/
+
+Listar o nome dos pacientes que nunca fizeram exames.
+/*select cpf, codigo_consulta from consulta where codigo_exame is null;*/
+
+Atualizar os exames de raio x para que tenham um aumento de 8%.
+/*update exames set valor = valor * 1.08 where codigo_exame = '2';*/
+
+Excluir os pacientes que nunca fizeram uma consulta.
+DELETE FROM paciente WHERE cpf NOT IN ( SELECT cpf FROM consulta );
+
+Totalizar o faturamento da clínica em um determinado período.
+/*select sum (con.valor) as total from (
+select c.data_consulta, c.codigo_consulta, c.valor
+from consulta as c 
+where c.data_consulta < '2023-04-01') as con; */

@@ -1,0 +1,37 @@
+PREÇOS MAIORES DO QUE A MEDIA
+
+select mo.descricao, mo.preco from modelo mo where mo.preco >
+(
+select round(avg(preco), 2 )
+from modelo
+);
+------------------------------------------------------------------
+
+AGRUPAR OS MODELOS E RETORNAR O PREÇO MINIMO DO MODELO
+
+select * from modelo  where preco in 
+(select min(preco) as preco_minimo from modelo
+group by codigo_marca);
+
+------------------------------------------------------------------
+
+LISTAR AS MARCAS SEM NENHUM MODELO 
+
+select * from marca where not exists(
+select * from modelo
+where modelo.codigo_marca = marca.codigo_marca
+);
+
+OUTRA FORMA
+
+select * from marca where marca.codigo_marca not in
+(select MO.CODIGO_MARCA from modelo as mo 
+inner join marca as m
+on mo.codigo_marca = m.codigo_marca
+ );
+-----------------------------------------------------------------
+UNION
+
+select descricao, preco from modelo 
+union
+select nome, preco from produto 
