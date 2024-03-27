@@ -1,0 +1,63 @@
+/*create table cliente(codigo_cliete serial primary key,
+					 nome varchar(50),
+			 		 email varchar(30),
+					 telefone char(11),
+					 endereco varchar(60)
+);*/
+
+/*create or replace function inserir_registros(quantidade integer)
+	returns void as 
+$$
+	declare 
+		i integer := 1;
+			begin
+				while i <= quantidade  loop
+					insert into cliente (nome, email, telefone, endereco)
+					values ('Cliente ' || i, 'cliente' ||i|| '@gmail.com',
+							'XXXXXXXXXXX', 'Endereço do Cliente' ||i);
+						i:=i+1;
+					end loop;
+end;
+$$
+language plpgsql;*/
+
+/*select inserir_registros(55780000);*/
+
+/*explain analyse select * from cliente where nome like 'Cliente 355%'*/
+
+/*create index idx_nome on cliente using btree(nome);*/
+
+/*create type status_pedido as enum(
+	'Pedente', 'Porcessando', 'Enviado', 'Entregue'
+);*/
+
+/*create table pedido( numero serial primary key,
+					  descricao varchar(40),
+					  data_pedido date,
+					  staus status_pedido
+);*/
+
+/*insert into pedido(descricao, data_pedido, status)
+	values('Compra de computador', '2024=03-02', 'Enviado')*/
+
+/*select * from pedido*/
+
+/*create type tamanho as enum(
+	'GG','G', 'M', 'P'
+);*/
+
+/*create table camisas(id_camisa serial primary key,
+					descricao varchar(40),
+					tamanho_camisa tamanho);*/
+					
+/*insert into camisas(descricao, tamanho_camisa)
+	values  ('Camiseta', 'M'),
+			('Camisa OverSize', 'G'),
+			('Camisa Flamengo 2024', 'M'),
+			('Camisa Hocks', 'P'),
+			('Camisa Termica', 'GG'),
+			('Camisa Dri-Fit', 'M'),
+			('Camisa Xadrez', 'P');*/
+			
+select tamanho_camisa,count(tamanho_camisa) from camisas
+group by tamanho_camisa;

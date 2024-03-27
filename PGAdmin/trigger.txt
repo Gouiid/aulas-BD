@@ -1,0 +1,97 @@
+CREATE TABLE empregado (id_empregado SERIAL PRIMARY KEY,
+					   nome VARCHAR(50) NOT NULL,
+					   sobrenome VARCHAR(40) NOT NULL,
+					   email VARCHAR(30) NOT NULL UNIQUE,
+					   cargo VARCHAR(30),
+					   salario NUMERIC NOT NULL);
+
+
+INSERT INTO empregado (nome,sobrenome,email,cargo,salario)
+VALUES('Maria','Silva','maria@gmail.com','Programadora',6400),
+('Jorge','Santos','jorge@gmail.com','Aux. Adm.',3200),
+('Ana','Oliveira','ana@gmail.com','Arquiteta',9300),
+('Renato','Nascimento','renato@gmail.com','Eng. Civil',8900);
+
+-------------PARA COPIAR É CTRL + C ---------------------------------
+
+
+CREATE TABLE empregado_auditoria
+(id_empregado_auditoria SERIAL PRIMARY KEY,
+id_empregado int, nome VARCHAR(50),
+data_modificacao date DEFAULT NULL,
+salario NUMERIC NOT NULL);
+
+------------------CRIANDO FUNCTION DA TRIGGER-------------------
+
+CREATE OR REPLACE FUNCTION empregado_atualizar_salario()
+RETURNS trigger AS $$
+BEGIN
+	INSERT INTO empregado_auditoria(id_empregado,nome,salario,data_modificacao)
+	VALUES(OLD.id_empregado,OLD.nome,OLD.salario, now());
+ RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+
+-----------------------CRIANDO TRIGGER PARA DISPARAR FUNÇÃO ----------------
+CREATE TRIGGER atualizar_salario
+AFTER UPDATE
+ON empregado
+FOR EACH ROW
+EXECUTE PROCEDURE empregado_atualizar_salario();
+
+
+----------------------------------CRIANDO TABELA EMPREGADo_AUDITORIA_DELETE-------
+CREATE TABLE empregado_auditoria_delete(
+id_empregado_delete SERIAL PRIMARY KEY,
+id_empregado int, nome VARCHAR(50), 
+sobrenome VARCHAR(40),email VARCHAR(50),
+cargo VARCHAR(40), salario NUMERIC,data_apagou DATE);
+
+-------------------------------------------CRIANDO FUNÇÃO PARA INSERIR UM FUNCIONARIO APAGADO NA EMPREGADO_AUDITORIA_DELETE-----------------
+
+
+CREATE OR REPLACE FUNCTION empregado_apagar()
+RETURNS trigger AS $$
+BEGIN
+	INSERT INTO empregado_auditoria_delete
+(id_empregado,nome,sobrenome,email,cargo,salario,data)
+VALUES(OLD.id_empregado,OLD.nome,OLD.sobrenome,OLD.email,
+	  OLD.cargo,OLD.salario,now());
+	  RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+
+
+
+
+create trigger apagar_empregado
+after delete on empregado
+for each row execute procedure empregado_apagar();
+
+delete from empregado where id_empregado=1;*/
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------Criando TRIGGER-----------------------------------------
+
+CREATE TRIGGER apagar_empregado
+AFTER DELETE ON empregado
+FOR EACH ROW EXECUTE PROCEDURE empregado_apagar();
+
+---------------------------- VOLTAR EMPREGADO ------------------------------------
+
+insert into empregado(id_empregado, nome, sobrenome, email, cargo, salario)
+select id_empregado, nome, sobrenome, email, cargo, salario
+from empregado_auditoria_delete;
