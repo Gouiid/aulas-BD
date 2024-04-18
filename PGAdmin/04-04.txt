@@ -1,0 +1,21 @@
+select * from imovel where alugado = false
+
+select i.id_imobiliaria, i.nome
+from imobiliaria i
+left join imovel m on i.id_imobiliaria = m.id_imobiliaria
+where m.id_imovel is null;
+
+select i.tipo_imovel, count(i.tipo_imovel) as tipo_imovel from imovel i
+where i.alugado = false
+group by i.tipo_imovel;
+
+select c.id_contrato, i.nome, i.cpf, p.data_pagamento, p.valor_pago from contrato c 
+inner join inquilino i on  c.id_inquilino = i.id_inquilino
+inner join pagamento p on c.id_contrato = p.id_contrato
+where c.id_contrato = 3;
+
+select sum(valor_pago) from pagamento where id_contrato = 3*/
+
+select c.id_contrato, i.nome from contrato c
+inner join inquilino i on c.id_inquilino = i.id_inquilino
+where c.data_encerramento > now()	
